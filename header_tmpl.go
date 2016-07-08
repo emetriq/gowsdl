@@ -26,9 +26,4 @@ import (
 // against "unused imports"
 var _ time.Time
 var _ xml.Name
-
-type HTTPHeader struct {
-	key 	string
-	value string
-}
 `

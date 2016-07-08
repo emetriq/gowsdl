@@ -44,6 +44,12 @@ type BasicAuth struct {
 	Password string
 }
 
+
+type HTTPHeader struct {
+	Key 	string
+	Value string
+}
+
 type SOAPClient struct {
 	url string
 	tls bool
@@ -150,7 +156,7 @@ func (s *SOAPClient) Call(soapAction string, request, response interface{}) erro
 
 	req.Header.Set("User-Agent", "gowsdl/0.1")
 	for _, h := range s.headers {
-		req.Header.Set(h.key, h.value)
+		req.Header.Set(h.Key, h.Value)
 	}
 	req.Close = true
 

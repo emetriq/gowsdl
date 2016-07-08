@@ -11,11 +11,11 @@ var opsTmpl = `
 		client *SOAPClient
 	}
 
-	func New{{$portType}}(url string, tls bool, auth *BasicAuth) *{{$portType}} {
+	func New{{$portType}}(url string, tls bool, auth *BasicAuth, headers ...HTTPHeader) *{{$portType}} {
 		if url == "" {
 			url = {{findServiceAddress .Name | printf "%q"}}
 		}
-		client := NewSOAPClient(url, tls, auth)
+		client := NewSOAPClient(url, tls, auth, headers)
 
 		return &{{$portType}}{
 			client: client,

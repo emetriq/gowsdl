@@ -18,6 +18,7 @@ compile:
 	-os="darwin" \
 	-os="linux" \
 	-os="windows" \
+	-arch="amd64" \
 	-output "build/$(NAME)_$(VERSION)_{{.OS}}_{{.Arch}}/$(NAME)" \
 	./...
 

@@ -104,11 +104,12 @@ func (f *SOAPFault) Error() string {
 	return f.String
 }
 
-func NewSOAPClient(url string, tls bool, auth *BasicAuth) *SOAPClient {
+func NewSOAPClient(url string, tls bool, auth *BasicAuth, headers ...HTTPHeader) *SOAPClient {
 	return &SOAPClient{
 		url: url,
 		tls: tls,
 		auth: auth,
+		headers: header,
 	}
 }
 
@@ -147,6 +148,9 @@ func (s *SOAPClient) Call(soapAction string, request, response interface{}) erro
 	}
 
 	req.Header.Set("User-Agent", "gowsdl/0.1")
+	for _, h := range s.headers {
+		req.Header.Set(h.key, h.value)
+	}
 	req.Close = true
 
 	tr := &http.Transport{

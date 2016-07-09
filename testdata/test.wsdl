@@ -25,9 +25,28 @@
   <wsdl:message name="GetInfoSoapOut">
     <wsdl:part name="parameters" element="tns:GetInfoResponse" />
   </wsdl:message>
-  <wsdl:service name="MNBArfolyamService">
+  <wsdl:portType name="TestSoapPort">
+    <operation name="GetInfo">
+      <input message="tns:GetInfo"/>
+      <output message="tns:GetInfoResponse"/>
+    </operation>
+  </wsdl:portType>
+  <binding name="TestSoapBinding" type="tns:TestSoapPort">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="sayHello">
+      <soap:operation soapAction="" style="document"/>
+		  <input>
+        <soap:body use="literal" />
+      </input>
+		
+      <output>
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <wsdl:service name="TestSoapService">
     <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">MNB curreny exchange rate webservice.</wsdl:documentation>
-    <wsdl:port name="MNBArfolyamServiceSoap" binding="tns:MNBArfolyamServiceSoap">
+    <wsdl:port name="TestSoapPort" binding="tns:TestSoapBinding">
       <soap:address location="http://www.mnb.hu/arfolyamok.asmx" />
     </wsdl:port>
     <wsdl:port name="MNBArfolyamServiceSoap12" binding="tns:MNBArfolyamServiceSoap12">

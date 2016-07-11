@@ -472,7 +472,7 @@ func (g *GoWSDL) findSOAPAction(operation, portType string) string {
 	return ""
 }
 
-// FIXME: bug here, should use binding instead of name
+// FIXME: bug here, should use binding instead of name, requires wsdl specific linking
 func (g *GoWSDL) findServiceAddress(name string) string {
 	for _, service := range g.wsdl.Service {
 		for _, port := range service.Ports {

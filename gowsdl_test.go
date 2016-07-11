@@ -48,7 +48,7 @@ type TestSoapPort struct {
 	client *SOAPClient
 }
 
-func NewTestSoapPort(url string, tls bool, auth *BasicAuth, headers ...HTTPHeader) *TestSoapPort {
+func NewTestSoapPort(url string, tls bool, auth *BasicAuth, headers ...*HTTPHeader) *TestSoapPort {
 	if url == "" {
 		url = "http://www.mnb.hu/arfolyamok.asmx"
 	}

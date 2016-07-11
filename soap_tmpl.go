@@ -54,7 +54,7 @@ type SOAPClient struct {
 	url string
 	tls bool
 	auth *BasicAuth
-	headers []HTTPHeader
+	headers []*HTTPHeader
 }
 
 func (b *SOAPBody) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
@@ -111,7 +111,7 @@ func (f *SOAPFault) Error() string {
 	return f.String
 }
 
-func NewSOAPClient(url string, tls bool, auth *BasicAuth, headers []HTTPHeader) *SOAPClient {
+func NewSOAPClient(url string, tls bool, auth *BasicAuth, headers []*HTTPHeader) *SOAPClient {
 	return &SOAPClient{
 		url: url,
 		tls: tls,

@@ -7,7 +7,9 @@ package gowsdl
 var typesTmpl = `
 {{define "SimpleType"}}
 	{{$type := replaceReservedWords .Name | makePublic}}
-	type {{$type}} {{toGoType .Restriction.Base}}
+	{{$primitiveType := toGoType .Restriction.Base}}
+	type {{$type}} {{$primitiveType}}
+	{{registerTypeAlias $type $primitiveType}}
 	const (
 		{{with .Restriction}}
 			{{range .Enumeration}}

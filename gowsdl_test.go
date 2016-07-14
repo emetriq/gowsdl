@@ -31,6 +31,16 @@ var _ time.Time
 var _ xml.Name
 `
 	simpleTypes = `
+type SimpleGoType string
+
+const (
+
+	//
+	// Just some value
+	//
+	SimpleGoTypeSOMEVALUE SimpleGoType = "SOMEVALUE"
+)
+
 type GetInfo struct {
 	XMLName xml.Name ` + "`xml:\"http://www.mnb.hu/webservices/ GetInfo\"`" + `
 }
@@ -42,7 +52,14 @@ type GetInfoResponse struct {
 
 	GetInfoResult string ` + "`xml:\"GetInfoResult,omitempty\"`" + `
 }
+
+type WrappedSimpleType struct {
+	XMLName xml.Name ` + "`xml:\"http://www.mnb.hu/webservices/ WrappedSimpleType\"`" + `
+
+	Operator SimpleGoType ` + "`xml:\"operator,omitempty\"`" + `
+}
 `
+
 	simpleOps = `
 type TestSoapPort struct {
 	client *SOAPClient
@@ -60,6 +77,8 @@ func NewTestSoapPort(url string, tls bool, auth *BasicAuth, headers ...*HTTPHead
 }
 `
 )
+
+var _ filepath.WalkFunc
 
 func TestElementGenerationDoesntCommentOutStructProperty(t *testing.T) {
 	g := GoWSDL{

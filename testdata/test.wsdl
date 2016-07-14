@@ -17,18 +17,40 @@
           </s:sequence>
         </s:complexType>
       </s:element>
+      <simpleType name="SimpleGoType">
+        <annotation>
+          <documentation>
+            This represents an operator that may be presented to an adsapi service.
+          </documentation>
+        </annotation>
+        <restriction base="xsd:string">
+          <enumeration value="SOMEVALUE">
+            <annotation>
+              <documentation>
+                Just some value
+              </documentation>
+            </annotation>
+          </enumeration>
+        </restriction>
+      </simpleType>
+      <complexType abstract="true" name="WrappedSimpleType">
+        <sequence>
+          <element maxOccurs="1" minOccurs="0" name="operator" type="tns:SimpleGoType">
+          </element>
+        </sequence>
+      </complexType>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="GetInfoSoapIn">
     <wsdl:part name="parameters" element="tns:GetInfo" />
   </wsdl:message>
-  <wsdl:message name="GetInfoSoapOut">
-    <wsdl:part name="parameters" element="tns:GetInfoResponse" />
+  <wsdl:message name="SimpleGoTypeMessage">
+    <wsdl:part name="parameters" element="tns:SimpleGoType" />
   </wsdl:message>
   <wsdl:portType name="TestSoapPort">
     <operation name="GetInfo">
       <input message="tns:GetInfo"/>
-      <output message="tns:GetInfoResponse"/>
+      <output message="tns:WrappedSimpleType"/>
     </operation>
   </wsdl:portType>
   <wsdl:binding name="TestSoapBinding" type="tns:TestSoapPort">

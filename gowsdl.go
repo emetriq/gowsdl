@@ -236,12 +236,13 @@ func (g *GoWSDL) resolveXSDExternals(schema *XSDSchema, url *url.URL) error {
 
 func (g *GoWSDL) genTypes() ([]byte, error) {
 	funcMap := template.FuncMap{
-		"toGoType":             toGoType,
+		"toGoType":             g.toGoType,
 		"stripns":              stripns,
 		"replaceReservedWords": replaceReservedWords,
 		"makePublic":           g.makePublicFn,
 		"comment":              comment,
 		"removeNS":             removeNS,
+		"registerTypeAlias":    g.registerTypeAlias,
 	}
 
 	//TODO resolve element refs in place.
@@ -257,9 +258,15 @@ func (g *GoWSDL) genTypes() ([]byte, error) {
 	return data.Bytes(), nil
 }
 
+func (g *GoWSDL) registerTypeAlias(alias string, primitiveType string) string {
+	xsd2GoAliasTypes[alias] = primitiveType
+	log.Printf("%s is now aliased by %s", primitiveType, alias)
+	return ""
+}
+
 func (g *GoWSDL) genOperations() ([]byte, error) {
 	funcMap := template.FuncMap{
-		"toGoType":             toGoType,
+		"toGoType":             g.toGoType,
 		"stripns":              stripns,
 		"replaceReservedWords": replaceReservedWords,
 		"makePublic":           g.makePublicFn,
@@ -280,7 +287,7 @@ func (g *GoWSDL) genOperations() ([]byte, error) {
 
 func (g *GoWSDL) genHeader() ([]byte, error) {
 	funcMap := template.FuncMap{
-		"toGoType":             toGoType,
+		"toGoType":             g.toGoType,
 		"stripns":              stripns,
 		"replaceReservedWords": replaceReservedWords,
 		"makePublic":           g.makePublicFn,
@@ -382,6 +389,8 @@ var xsd2GoTypes = map[string]string{
 	"anytype":       "interface{}",
 }
 
+var xsd2GoAliasTypes = map[string]string{}
+
 func removeNS(xsdType string) string {
 	// Handles name space, ie. xsd:string, xs:string
 	r := strings.Split(xsdType, ":")
@@ -393,7 +402,7 @@ func removeNS(xsdType string) string {
 	}
 }
 
-func toGoType(xsdType string) string {
+func (g *GoWSDL) toGoType(xsdType string) string {
 	// Handles name space, ie. xsd:string, xs:string
 	r := strings.Split(xsdType, ":")
 
@@ -403,10 +412,16 @@ func toGoType(xsdType string) string {
 		t = r[1]
 	}
 
-	value := xsd2GoTypes[strings.ToLower(t)]
-
-	if value != "" {
+	value, ok := xsd2GoTypes[strings.ToLower(t)]
+	if ok {
 		return value
+	}
+
+	typeName := replaceReservedWords(makePublic(t))
+
+	_, ok = xsd2GoAliasTypes[typeName]
+	if ok {
+		return typeName
 	}
 
 	return "*" + replaceReservedWords(makePublic(t))
